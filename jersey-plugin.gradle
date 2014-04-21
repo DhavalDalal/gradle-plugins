@@ -28,17 +28,13 @@ repositories {
 }
 
 
-ext {
-    jerseyBundle = 'com.sun.jersey:jersey-bundle:1.17'
-}
-
 dependencies {
 	
 	/* JAX-RS (JSR 311) API */
 //	compile 'javax.ws.rs:jsr311-api:1.1.1'
 	
 	/ * JERSEY BUNDLE */
-	compile project.ext.jerseyBundle
+	compile project.extensions.jersey.jerseyBundle
 
 	compile gradleApi()
 	groovy localGroovy()
@@ -129,10 +125,10 @@ class JerseyPlugin implements Plugin<Project> {
 
 // Define the Jersey extension properties
 class JerseyPluginExtension {
-    String jerseyBundle = project.ext.jerseyBundle
 	String packages = ''
 	String servletName = 'Jersey Servlet'
 	String urlPattern = '/*'
+    String jerseyBundle = 'com.sun.jersey:jersey-bundle:1.17'
     String servletContainerClass = 'com.sun.jersey.spi.container.servlet.ServletContainer'
     String servletContainerPackage = 'com.sun.jersey.config.property.packages'
 }
