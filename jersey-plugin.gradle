@@ -26,15 +26,20 @@ import org.slf4j.LoggerFactory
 repositories {
 	mavenCentral()
 }
-	
+
+
+ext {
+    jerseyBundle = 'com.sun.jersey:jersey-bundle:1.17'
+}
+
 dependencies {
 	
 	/* JAX-RS (JSR 311) API */
-	compile 'javax.ws.rs:jsr311-api:1.1.1'
+//	compile 'javax.ws.rs:jsr311-api:1.1.1'
 	
 	/ * JERSEY BUNDLE */
-	compile 'com.sun.jersey:jersey-bundle:1.17'
-		
+	compile project.ext.jerseyBundle
+
 	compile gradleApi()
 	groovy localGroovy()
 		
@@ -53,7 +58,8 @@ class JerseyPlugin implements Plugin<Project> {
 	Logger log = LoggerFactory.getLogger("build-logger")
 
 	void apply(Project project) {
-		
+
+        println("Jersey Plugin = ${project.dependencies}")
 		project.extensions.jersey =  new JerseyPluginExtension()
 		
 		project.task('prepWebXml') {
@@ -123,6 +129,7 @@ class JerseyPlugin implements Plugin<Project> {
 
 // Define the Jersey extension properties
 class JerseyPluginExtension {
+    String jerseyBundle = project.ext.jerseyBundle
 	String packages = ''
 	String servletName = 'Jersey Servlet'
 	String urlPattern = '/*'
