@@ -29,13 +29,8 @@ repositories {
 
 
 dependencies {
-    println("Dependencies Called....${project.jersey.jerseyBundle}")
-	
-	/* JAX-RS (JSR 311) API */
-//	compile 'javax.ws.rs:jsr311-api:1.1.1'
-	
 	/ * JERSEY BUNDLE */
-	compile project.jersey.jerseyBundle
+	compile 'org.glassfish.jersey.bundles:jaxrs-ri:2.7'
 
 	compile gradleApi()
 	groovy localGroovy()
@@ -57,17 +52,9 @@ class JerseyPlugin implements Plugin<Project> {
 	void apply(Project project) {
 
         println("Apply Called....")
-        project.extensions.create('jersey', JerseyPluginExtension)
-        project.configurations.create('jersey') {
-            extendsFrom project.configurations['compile']
-        }
-        project.dependencies {
-            jersey project.extensions.jersey.jerseyBundle
-        }
+//        project.extensions.create('jersey', JerseyPluginExtension)
+		project.extensions.jersey =  new JerseyPluginExtension()
 
-//		project.extensions.jersey =  new JerseyPluginExtension()
-        println("Apply Called....${project.jersey}")
-		
 		project.task('prepWebXml') {
 			
 			doLast {
@@ -98,26 +85,26 @@ class JerseyPlugin implements Plugin<Project> {
 
 				xml.servlet.replaceNode {
 					servlet {
-						'servlet-name'(project.jersey.servletName)
-						'servlet-class'(project.jersey.servletContainerClass)
+						'servlet-name'(project.extensions.jersey.servletName)
+						'servlet-class'(project.extensions.jersey.servletContainerClass)
 						'init-param' {
-							'param-name'(project.jersey.servletContainerPackage)
-							'param-value'(project.jersey.packages)
+							'param-name'(project.extensions.jersey.servletContainerPackage)
+							'param-value'(project.extensions.jersey.packages)
 						}
 					}
 				}
 
 				xml.'servlet-mapping'.replaceNode {
 					'servlet-mapping' {
-						'servlet-name'(project.jersey.servletName)
-						'url-pattern'(project.jersey.urlPattern)
+						'servlet-name'(project.extensions.jersey.servletName)
+						'url-pattern'(project.extensions.jersey.urlPattern)
 					}
 				}
 
 				// serialize xml to string
 				String output = XmlUtil.serialize((Node)xml)
 
-				log.info "web.xml updated with packages=${project.jersey.packages}, servletName=${project.jersey.servletName}, and urlPattern=${project.jersey.urlPattern}"
+				log.info "web.xml updated with packages=${project.extensions.jersey.packages}, servletName=${project.extensions.jersey.servletName}, and urlPattern=${project.extensions.jersey.urlPattern}"
 
 				// write serialized XML to web.xml file
 				webXml.write(output)
@@ -135,23 +122,9 @@ class JerseyPlugin implements Plugin<Project> {
 
 // Define the Jersey extension properties
 class JerseyPluginExtension {
-//    private Project project
 	String packages
 	String servletName
 	String urlPattern
-    String jerseyBundle
     String servletContainerClass
     String servletContainerPackage
-
-//    JerseyPluginExtension(Project project) {
-//        project.logger.info "creating jersey plugin extension"
-//        this.project = project
-//
-//        packages = project.jersey.packages?: ''
-//        servletName = project.jersey.servletName?: 'Jersey Servlet'
-//        urlPattern = project.jersey.urlPattern?: '/*'
-//        jerseyBundle = project.jersey.jerseyBundle?: 'com.sun.jersey:jersey-bundle:1.17'
-//        servletContainerClass =  project.jersey.servletContainerClass?: 'com.sun.jersey.spi.container.servlet.ServletContainer'
-//        servletContainerPackage = project.jersey.servletContainerPackage?: 'com.sun.jersey.config.property.packages'
-//    }
 }
