@@ -29,13 +29,13 @@ repositories {
 
 
 dependencies {
-    println("Dependencies Called....${project.extensions.jersey.jerseyBundle}")
+    println("Dependencies Called....${project.jersey.jerseyBundle}")
 	
 	/* JAX-RS (JSR 311) API */
 //	compile 'javax.ws.rs:jsr311-api:1.1.1'
 	
 	/ * JERSEY BUNDLE */
-	compile project.extensions.jersey.jerseyBundle
+	compile project.jersey.jerseyBundle
 
 	compile gradleApi()
 	groovy localGroovy()
@@ -59,7 +59,7 @@ class JerseyPlugin implements Plugin<Project> {
         println("Apply Called....")
         project.extensions.create('jersey', JerseyPluginExtension, project)
 //		project.extensions.jersey =  new JerseyPluginExtension()
-        println("Apply Called....${project.extensions.jersey}")
+        println("Apply Called....${project.jersey}")
 		
 		project.task('prepWebXml') {
 			
@@ -91,26 +91,26 @@ class JerseyPlugin implements Plugin<Project> {
 
 				xml.servlet.replaceNode {
 					servlet {
-						'servlet-name'(project.extensions.jersey.servletName)
-						'servlet-class'(project.extensions.jersey.servletContainerClass)
+						'servlet-name'(project.jersey.servletName)
+						'servlet-class'(project.jersey.servletContainerClass)
 						'init-param' {
-							'param-name'(project.extensions.jersey.servletContainerPackage)
-							'param-value'(project.extensions.jersey.packages)
+							'param-name'(project.jersey.servletContainerPackage)
+							'param-value'(project.jersey.packages)
 						}
 					}
 				}
 
 				xml.'servlet-mapping'.replaceNode {
 					'servlet-mapping' {
-						'servlet-name'(project.extensions.jersey.servletName)
-						'url-pattern'(project.extensions.jersey.urlPattern)
+						'servlet-name'(project.jersey.servletName)
+						'url-pattern'(project.jersey.urlPattern)
 					}
 				}
 
 				// serialize xml to string
 				String output = XmlUtil.serialize((Node)xml)
 
-				log.info "web.xml updated with packages=${project.extensions.jersey.packages}, servletName=${project.extensions.jersey.servletName}, and urlPattern=${project.extensions.jersey.urlPattern}"
+				log.info "web.xml updated with packages=${project.jersey.packages}, servletName=${project.jersey.servletName}, and urlPattern=${project.jersey.urlPattern}"
 
 				// write serialized XML to web.xml file
 				webXml.write(output)
@@ -128,7 +128,7 @@ class JerseyPlugin implements Plugin<Project> {
 
 // Define the Jersey extension properties
 class JerseyPluginExtension {
-    private Project project
+//    private Project project
 	String packages
 	String servletName
 	String urlPattern
@@ -136,15 +136,15 @@ class JerseyPluginExtension {
     String servletContainerClass
     String servletContainerPackage
 
-    JerseyPluginExtension(Project project) {
-        project.logger.info "creating extension"
-        this.project = project
-
-        packages = project.jersey.packages?: ''
-        servletName = project.jersey.servletName?: 'Jersey Servlet'
-        urlPattern = project.jersey.urlPattern?: '/*'
-        jerseyBundle = project.jersey.jerseyBundle?: 'com.sun.jersey:jersey-bundle:1.17'
-        servletContainerClass =  project.jersey.servletContainerClass?: 'com.sun.jersey.spi.container.servlet.ServletContainer'
-        servletContainerPackage = project.jersey.servletContainerPackage?: 'com.sun.jersey.config.property.packages'
-    }
+//    JerseyPluginExtension(Project project) {
+//        project.logger.info "creating jersey plugin extension"
+//        this.project = project
+//
+//        packages = project.jersey.packages?: ''
+//        servletName = project.jersey.servletName?: 'Jersey Servlet'
+//        urlPattern = project.jersey.urlPattern?: '/*'
+//        jerseyBundle = project.jersey.jerseyBundle?: 'com.sun.jersey:jersey-bundle:1.17'
+//        servletContainerClass =  project.jersey.servletContainerClass?: 'com.sun.jersey.spi.container.servlet.ServletContainer'
+//        servletContainerPackage = project.jersey.servletContainerPackage?: 'com.sun.jersey.config.property.packages'
+//    }
 }
