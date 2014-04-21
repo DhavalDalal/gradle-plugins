@@ -57,7 +57,9 @@ class JerseyPlugin implements Plugin<Project> {
 	void apply(Project project) {
 
         println("Apply Called....")
-		project.extensions.jersey =  new JerseyPluginExtension()
+        project.extensions.create('jersey', JerseyPluginExtension, project)
+//		project.extensions.jersey =  new JerseyPluginExtension()
+        println("Apply Called....${project.extensions.jersey}")
 		
 		project.task('prepWebXml') {
 			
@@ -126,10 +128,23 @@ class JerseyPlugin implements Plugin<Project> {
 
 // Define the Jersey extension properties
 class JerseyPluginExtension {
-	String packages = ''
-	String servletName = 'Jersey Servlet'
-	String urlPattern = '/*'
-    String jerseyBundle = 'com.sun.jersey:jersey-bundle:1.17'
-    String servletContainerClass = 'com.sun.jersey.spi.container.servlet.ServletContainer'
-    String servletContainerPackage = 'com.sun.jersey.config.property.packages'
+    private Project project
+	String packages
+	String servletName
+	String urlPattern
+    String jerseyBundle
+    String servletContainerClass
+    String servletContainerPackage
+
+    JerseyPluginExtension(Project project) {
+        project.logger.info "creating extension"
+        this.project = project
+
+        packages = project.jersey.packages?: ''
+        servletName = project.jersey.servletName?: 'Jersey Servlet'
+        urlPattern = project.jersey.urlPattern?: '/*'
+        jerseyBundle = project.jersey.jerseyBundle?: 'com.sun.jersey:jersey-bundle:1.17'
+        servletContainerClass =  project.jersey.servletContainerClass?: 'com.sun.jersey.spi.container.servlet.ServletContainer'
+        servletContainerPackage = project.jersey.servletContainerPackage?: 'com.sun.jersey.config.property.packages'
+    }
 }
