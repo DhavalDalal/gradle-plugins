@@ -57,7 +57,7 @@ class JerseyPlugin implements Plugin<Project> {
 	void apply(Project project) {
 
         println("Apply Called....")
-        project.extensions.create('jersey', JerseyPluginExtension, project)
+        project.extensions.create('jersey', JerseyPluginExtension)
 //		project.extensions.jersey =  new JerseyPluginExtension()
         println("Apply Called....${project.jersey}")
 		
