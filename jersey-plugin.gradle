@@ -29,6 +29,7 @@ repositories {
 
 
 dependencies {
+    println("Dependencies Called....${project.extensions.jersey.jerseyBundle}")
 	
 	/* JAX-RS (JSR 311) API */
 //	compile 'javax.ws.rs:jsr311-api:1.1.1'
@@ -55,7 +56,7 @@ class JerseyPlugin implements Plugin<Project> {
 
 	void apply(Project project) {
 
-        println("Jersey Plugin = ${project.dependencies}")
+        println("Apply Called....")
 		project.extensions.jersey =  new JerseyPluginExtension()
 		
 		project.task('prepWebXml') {
