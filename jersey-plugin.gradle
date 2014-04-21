@@ -87,9 +87,9 @@ class JerseyPlugin implements Plugin<Project> {
 				xml.servlet.replaceNode {
 					servlet {
 						'servlet-name'(project.extensions.jersey.servletName)
-						'servlet-class'("com.sun.jersey.spi.container.servlet.ServletContainer")
+						'servlet-class'(project.extensions.jersey.servletContainerClass)
 						'init-param' {
-							'param-name'("com.sun.jersey.config.property.packages")
+							'param-name'(project.extensions.jersey.servletContainerPackage)
 							'param-value'(project.extensions.jersey.packages)
 						}
 					}
@@ -126,4 +126,6 @@ class JerseyPluginExtension {
 	String packages = ''
 	String servletName = 'Jersey Servlet'
 	String urlPattern = '/*'
+    String servletContainerClass = 'com.sun.jersey.spi.container.servlet.ServletContainer'
+    String servletContainerPackage = 'com.sun.jersey.config.property.packages'
 }
