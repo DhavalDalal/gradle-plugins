@@ -62,7 +62,7 @@ class JerseyPlugin implements Plugin<Project> {
             extendsFrom project.configurations['compile']
         }
         project.dependencies {
-            jersey project.jersey.jerseyBundle
+            jersey project.extensions.jersey.jerseyBundle
         }
 
 //		project.extensions.jersey =  new JerseyPluginExtension()
